@@ -21,7 +21,7 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.model_selection import GridSearchCV
-
+nltk.download(['wordnet', 'punkt','stopwords'])
 
 
 def load_data(database_filepath):
@@ -105,7 +105,19 @@ def build_model():
 
 
 
-def evaluate_model(model, X_test, Y_test, categorY_names):
+def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    Function to evaluate NLP model
+    Parameters:
+    - model: NLP model
+    - X_test: X test data for model
+    - Y_test: Y test data for model
+    - category_names: names of categories in the data
+     
+    Returns:
+     -  modelling metrics for NLP model
+     """
+
     Y_pred = model.predict(X_test)
     
     for i, column_name in enumerate(Y_test.columns):
@@ -152,6 +164,15 @@ def evaluate_model(model, X_test, Y_test, categorY_names):
 
 
 def save_model(model, model_filepath):
+    """
+    Function to save model to pkl file
+    Parameters:
+    - model: NLP model
+    - model_filepath: file path for model to be saved to
+     
+    Returns:
+     -  exported model as a pickle file
+     """
     #export model as a pickle file
     with open(model_filepath, 'wb') as file:
         pickle.dump(model, file)
@@ -167,8 +188,11 @@ def main():
         print('Building model...')
         model = build_model()
         
+
         print('Training model...')
         model.fit(X_train, Y_train)
+        
+
         
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, categorY_names)
